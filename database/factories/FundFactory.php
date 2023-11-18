@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\FundManager;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class FundFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'fund_manager_id' => FundManager::factory(),
+            'name' => fake()->company(),
+            'start_year' => fake()->year(),
         ];
     }
 }
