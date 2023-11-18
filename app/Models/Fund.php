@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\FundCreated;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,14 @@ class Fund extends Model
         'name',
         'start_year'
     ];
+
+    protected static function booted(): void
+    {
+        static::saved(function (Fund $fund) {
+            FundCreated::dispatch($fund);
+        });
+    }
+
     public function fundManager(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(FundManager::class);
