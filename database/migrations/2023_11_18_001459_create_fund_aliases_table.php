@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('fund_aliases', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('fund_id');
+            $table->foreign('fund_id')
+                ->references('id')
+                ->on('funds')
+                ->onDelete('cascade');
+            $table->string('name')->index();
+            $table->index(['name','fund_id']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
