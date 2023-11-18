@@ -23,6 +23,9 @@ class FundResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'start_year' => (int) $this->start_year,
+            'aliases' => $this->aliases->pluck('name'),
+            'fund_manager' => $this->fundManager->name,
+            'companies' => $this->companies->map->only('id', 'name')
         ];
     }
 }
