@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FundResource;
 use App\Models\Fund;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class FundController extends Controller
      */
     public function index()
     {
-        //
+        return FundResource::collection(
+            Fund::query()->paginate()
+        );
     }
 
 
