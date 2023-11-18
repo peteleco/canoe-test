@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('company_fund', function (Blueprint $table) {
             $table->id();
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('cascade');
+            $table->unsignedBigInteger('fund_id');
+            $table->foreign('fund_id')
+                ->references('id')
+                ->on('funds')
+                ->onDelete('cascade');
+            $table->unsignedBigInteger('company_id');
+            $table->index(['company_id', 'fund_id']);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
