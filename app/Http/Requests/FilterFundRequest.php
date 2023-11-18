@@ -30,6 +30,10 @@ class FilterFundRequest extends FormRequest
                 'nullable',
                 'numeric',
                 'max:' . date('Y')
+            ],
+            'fund_manager' => [
+                'nullable',
+                'max:255'
             ]
         ];
     }
