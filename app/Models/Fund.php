@@ -10,7 +10,11 @@ class Fund extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
+    protected $fillable = [
+        'fund_manager_id',
+        'name',
+        'start_year'
+    ];
     public function fundManager(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(FundManager::class);

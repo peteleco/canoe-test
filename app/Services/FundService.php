@@ -33,4 +33,39 @@ class FundService
 
         return $query;
     }
+
+    public function update(UpdateFundRequest $request, Fund $fund): Fund
+    {
+        return DB::transaction(function () use ($request, $fund) {
+            $fund->update([
+                'fund_manager_id' => $request->input('fund_manager_id'),
+                'name' => $request->input('name'),
+                'start_year' => $request->input('start_year'),
+            ]);
+            if($request->input('aliases')) {
+                $this->updateAliases($fund, $request->input('aliases'));
+            }
+            if($request->input('companies')) {
+                $this->updateCompanies($fund, $request->input('companies'));
+            }
+
+            return $fund->refresh();
+        });
+    }
+
+    private function updateAliases(Fund $fund, array $aliases): void
+    {
+        $aliases = collect($aliases)->map(function ($alias) use ($fund) {
+            return FundAlias::firstOrCreate([
+                'fund_id' => $fund->id,
+                'name' => $alias,
+            ]);
+        });
+        $fund->aliases->diff($aliases)->each->delete();
+    }
+
+    private function updateCompanies(Fund $fund, array $companies): void
+    {
+        $fund->companies()->sync($companies);
+    }
 }
