@@ -68,4 +68,19 @@ class FundService
     {
         $fund->companies()->sync($companies);
     }
+
+    //  If a new fund is created with a name and manager
+    // that matches the name or an alias of an existing fund with the same manager,
+    // throw a duplicate_fund_warning event.
+    public function findDuplication(Fund $fund): Builder
+    {
+        return Fund::query()->where('fund_manager_id', $fund->fund_manager_id)
+            ->where('funds.id', '!=', $fund->id)
+            ->where(function (Builder $query) use ($fund) {
+                $query->orWhere('funds.name', 'like', '%' . $fund->name . '%')
+                    ->orWhereHas('aliases', function (Builder $query) use ($fund) {
+                        $query->where('fund_aliases.name', 'like', '%' . $fund->name . '%');
+                    });
+            });
+    }
 }

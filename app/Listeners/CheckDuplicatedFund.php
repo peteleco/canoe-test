@@ -15,8 +15,9 @@ class CheckDuplicatedFund
     /**
      * Create the event listener.
      */
-    public function __construct()
+    public function __construct(FundService $fundService)
     {
+        $this->fundService = $fundService;
     }
 
     /**
@@ -28,5 +29,9 @@ class CheckDuplicatedFund
      */
     public function handle(FundCreated $event): void
     {
+        if ($this->fundService->findDuplication($event->fund)->exists()) {
+            $duplications = $this->fundService->findDuplication($event->fund)->with('aliases')->get();
+            DuplicatedFundsFounded::dispatch($event->fund, $duplications);
+        }
     }
 }
