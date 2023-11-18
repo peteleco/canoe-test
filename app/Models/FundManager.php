@@ -10,5 +10,9 @@ class FundManager extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    
+
+    public function funds(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Fund::class);
+    }
 }
